@@ -5,7 +5,7 @@ A dual-platform engineering tool (Web-based & CLI) designed to calculate optical
 ---
 
 ## 🚀 Live Demo
-**[CLICK HERE TO VIEW THE WEB CALCULATOR](https://your-username.github.io/loss-kalkulator-fo/)**
+**[CLICK HERE TO VIEW THE WEB CALCULATOR]([https://your-username.github.io/loss-kalkulator-fo/](https://riqolosskalkulator.netlify.app/))**
 
 ---
 
