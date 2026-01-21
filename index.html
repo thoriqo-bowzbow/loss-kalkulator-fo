@@ -11,153 +11,206 @@
     <!-- FontAwesome Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <!-- Meta untuk Tampilan Mobile App -->
     <meta name="theme-color" content="#0f172a">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #e2e8f0; }
-        .card { background-color: #1e293b; border: 1px solid #334155; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
         .input-group { position: relative; }
-        .input-icon { position: absolute; left: 12px; top: 12px; color: #64748b; }
+        .input-icon { position: absolute; left: 14px; top: 14px; color: #94a3b8; transition: color 0.3s; }
         .custom-input { 
             width: 100%; 
-            background-color: #334155; 
-            border: 1px solid #475569; 
+            background-color: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(148, 163, 184, 0.2);
             color: white; 
-            border-radius: 0.5rem; 
-            padding: 10px 10px 10px 40px; 
+            border-radius: 0.75rem;
+            padding: 12px 12px 12px 44px;
             outline: none;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .custom-input:focus { border-color: #06b6d4; ring: 2px solid #06b6d4; }
-        .section-title { font-size: 0.75rem; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.05em; margin-bottom: 0.5rem; font-weight: 600; }
+        .custom-input:focus {
+            border-color: #22d3ee;
+            box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.1);
+            background-color: rgba(15, 23, 42, 0.8);
+        }
+        .input-group:focus-within .input-icon { color: #22d3ee; }
+
+        .section-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: #94a3b8;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
         
         /* Hilangkan spinner number */
         input::-webkit-outer-spin-button,
         input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in-up { animation: fadeIn 0.4s ease-out forwards; }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen p-4">
+<body class="flex items-center justify-center p-4 selection:bg-cyan-500 selection:text-white">
 
-    <div class="card w-full max-w-lg rounded-xl shadow-2xl overflow-hidden">
+    <!-- Decorative Elements -->
+    <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+        <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-cyan-500/10 rounded-full blur-[100px]"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-500/10 rounded-full blur-[100px]"></div>
+    </div>
+
+    <div class="glass-card w-full max-w-lg rounded-2xl overflow-hidden animate-fade-in-up">
         
         <!-- Header -->
-        <div class="bg-slate-900 p-5 border-b border-slate-700 flex justify-between items-center">
+        <div class="p-6 border-b border-white/5 flex justify-between items-center bg-white/5">
             <div>
-                <h1 class="text-lg font-bold text-white flex items-center gap-2">
-                    <i class="fa-solid fa-satellite-dish text-cyan-400"></i>
-                    Link Budget Calculator
+                <h1 class="text-xl font-bold text-white flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center shadow-lg shadow-cyan-500/20">
+                        <i class="fa-solid fa-satellite-dish text-white text-sm"></i>
+                    </div>
+                    <span class="bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">Link Budget</span>
                 </h1>
-                <p class="text-xs text-slate-400">Versi Engineer (Loss Fisik & Aksesoris)</p>
+                <p class="text-xs text-slate-400 mt-1 font-medium ml-11">Engineer Edition (Physical Loss & Accessories)</p>
             </div>
             <div class="text-right">
-                <span class="text-[10px] bg-cyan-900 text-cyan-300 px-2 py-1 rounded border border-cyan-700">ONLINE</span>
+                <span class="text-[10px] font-bold bg-green-500/20 text-green-400 px-2.5 py-1 rounded-full border border-green-500/20 flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span>
+                    ONLINE
+                </span>
             </div>
         </div>
 
-        <div class="p-5 space-y-6">
+        <div class="p-6 space-y-8">
             
             <!-- SECTION 1: SUMBER DAYA -->
             <div>
-                <h3 class="section-title"><i class="fa-solid fa-bolt mr-1"></i> Sumber Daya (OLT/SFP)</h3>
+                <h3 class="section-title"><i class="fa-solid fa-bolt text-yellow-400"></i> Sumber Daya (OLT/SFP)</h3>
                 <div class="input-group">
                     <i class="fa-solid fa-server input-icon"></i>
                     <input type="text" id="inputPower" placeholder="Contoh: 7, 5, atau -2" 
-                        class="custom-input font-mono text-lg text-yellow-400" autocomplete="off">
+                        class="custom-input font-mono text-lg text-yellow-400 placeholder-slate-600" autocomplete="off">
                 </div>
-                <p class="text-[10px] text-slate-500 mt-1 ml-1">Masukkan Output Power SFP (dBm)</p>
+                <p class="text-xs text-slate-500 mt-2 ml-1">Masukkan Output Power SFP (dBm)</p>
             </div>
 
             <!-- SECTION 2: PERANGKAT PASIF -->
-            <div class="bg-slate-800/50 p-4 rounded-lg border border-slate-700">
-                <h3 class="section-title text-cyan-500"><i class="fa-solid fa-wrench mr-1"></i> Parameter Fisik Lapangan</h3>
+            <div class="bg-slate-800/40 p-5 rounded-xl border border-white/5">
+                <h3 class="section-title text-cyan-400 mb-4"><i class="fa-solid fa-wrench"></i> Parameter Fisik Lapangan</h3>
                 
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-2 gap-5">
                     <!-- Jarak Kabel -->
                     <div>
-                        <label class="text-xs text-slate-400 block mb-1">Panjang Kabel (Km)</label>
+                        <label class="text-xs font-semibold text-slate-400 block mb-2">Panjang Kabel (Km)</label>
                         <div class="input-group">
-                            <i class="fa-solid fa-ruler-horizontal input-icon text-xs top-3.5"></i>
+                            <i class="fa-solid fa-ruler-horizontal input-icon text-xs top-[15px]"></i>
                             <input type="text" id="cableLength" placeholder="0" class="custom-input text-sm" inputmode="decimal">
                         </div>
                     </div>
 
                     <!-- Jumlah Splicing -->
                     <div>
-                        <label class="text-xs text-slate-400 block mb-1">Jml. Splicing (Titik)</label>
+                        <label class="text-xs font-semibold text-slate-400 block mb-2">Jml. Splicing (Titik)</label>
                         <div class="input-group">
-                            <i class="fa-solid fa-fire-burner input-icon text-xs top-3.5"></i>
+                            <i class="fa-solid fa-fire-burner input-icon text-xs top-[15px]"></i>
                             <input type="number" id="spliceCount" placeholder="0" class="custom-input text-sm">
                         </div>
                     </div>
                 </div>
 
-                <div class="mt-3">
-                    <label class="text-xs text-slate-400 block mb-1">Total Konektor / Adapter (SC)</label>
+                <div class="mt-5">
+                    <label class="text-xs font-semibold text-slate-400 block mb-2">Total Konektor / Adapter (SC)</label>
                     <div class="input-group">
-                        <i class="fa-solid fa-plug input-icon text-xs top-3.5"></i>
+                        <i class="fa-solid fa-plug input-icon text-xs top-[15px]"></i>
                         <input type="number" id="connectorCount" placeholder="0" class="custom-input text-sm">
                     </div>
-                    <p class="text-[10px] text-slate-500 mt-1">Hitung semua konektor (OTB + Roset + Patchcord)</p>
+                    <p class="text-[10px] text-slate-500 mt-2">Hitung semua konektor (OTB + Roset + Patchcord)</p>
                 </div>
             </div>
 
             <!-- SECTION 3: SPLITTER -->
             <div>
-                <h3 class="section-title"><i class="fa-solid fa-network-wired mr-1"></i> Passive Splitter</h3>
+                <h3 class="section-title"><i class="fa-solid fa-network-wired text-purple-400"></i> Passive Splitter</h3>
                 <div class="input-group">
                     <i class="fa-solid fa-arrows-split-up-and-left input-icon"></i>
-                    <select id="splitterType" class="custom-input cursor-pointer appearance-none">
+                    <select id="splitterType" class="custom-input cursor-pointer appearance-none bg-slate-900/50">
                         <!-- Options filled by JS -->
                     </select>
-                    <i class="fa-solid fa-chevron-down absolute right-4 top-3.5 text-slate-500 pointer-events-none text-xs"></i>
+                    <i class="fa-solid fa-chevron-down absolute right-4 top-4 text-slate-500 pointer-events-none text-xs"></i>
                 </div>
             </div>
 
             <!-- BUTTON -->
-            <div class="flex gap-2">
-                <button onclick="resetForm()" class="w-1/4 bg-slate-700 hover:bg-slate-600 text-slate-300 font-bold py-3 rounded-lg shadow-lg transition-all">
+            <div class="flex gap-3 pt-2">
+                <button onclick="resetForm()" class="w-1/4 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-3.5 rounded-xl shadow-lg border border-slate-700 transition-all active:scale-95">
                     <i class="fa-solid fa-rotate-left"></i>
                 </button>
-                <button onclick="calculate()" class="w-3/4 bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 rounded-lg shadow-lg transform active:scale-[0.99] transition-all flex justify-center items-center gap-2">
-                    <i class="fa-solid fa-calculator"></i> HITUNG
+                <button onclick="calculate()" class="w-3/4 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-cyan-500/20 transform active:scale-[0.98] transition-all flex justify-center items-center gap-2 group">
+                    <i class="fa-solid fa-calculator group-hover:rotate-12 transition-transform"></i> HITUNG
                 </button>
             </div>
 
             <!-- RESULT -->
-            <div id="resultContainer" class="hidden animate-fade-in-up space-y-0 border-t border-slate-700 pt-4">
+            <div id="resultContainer" class="hidden animate-fade-in-up space-y-0 border-t border-white/10 pt-6">
                 
                 <!-- Rincian Loss Table -->
-                <div class="bg-slate-900 rounded-t-lg p-3 text-xs border border-slate-700 border-b-0">
-                    <h4 class="font-bold text-slate-300 mb-2 border-b border-slate-700 pb-1">RINCIAN LOSS BUDGET</h4>
-                    <div class="flex justify-between py-1 border-b border-slate-800 border-dashed">
-                        <span class="text-slate-400">Kabel Fiber (<span id="lenVal">0</span> km x 0.35)</span>
-                        <span class="text-red-400 font-mono" id="lossCable">-0.00 dB</span>
+                <div class="bg-black/30 rounded-t-xl p-4 text-xs border border-white/5 border-b-0">
+                    <h4 class="font-bold text-slate-300 mb-3 border-b border-white/10 pb-2 flex justify-between items-center">
+                        <span>RINCIAN LOSS BUDGET</span>
+                        <i class="fa-solid fa-clipboard-list text-slate-500"></i>
+                    </h4>
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center py-1">
+                            <span class="text-slate-400">Kabel Fiber (<span id="lenVal" class="text-slate-300">0</span> km x 0.35)</span>
+                            <span class="text-red-400 font-mono font-bold bg-red-500/10 px-2 py-0.5 rounded" id="lossCable">-0.00 dB</span>
+                        </div>
+                        <div class="flex justify-between items-center py-1">
+                            <span class="text-slate-400">Splicing (<span id="spliceVal" class="text-slate-300">0</span> titik x 0.1)</span>
+                            <span class="text-red-400 font-mono font-bold bg-red-500/10 px-2 py-0.5 rounded" id="lossSplice">-0.00 dB</span>
+                        </div>
+                        <div class="flex justify-between items-center py-1">
+                            <span class="text-slate-400">Konektor (<span id="connVal" class="text-slate-300">0</span> pcs x 0.3)</span>
+                            <span class="text-red-400 font-mono font-bold bg-red-500/10 px-2 py-0.5 rounded" id="lossConn">-0.00 dB</span>
+                        </div>
                     </div>
-                    <div class="flex justify-between py-1 border-b border-slate-800 border-dashed">
-                        <span class="text-slate-400">Splicing (<span id="spliceVal">0</span> titik x 0.1)</span>
-                        <span class="text-red-400 font-mono" id="lossSplice">-0.00 dB</span>
-                    </div>
-                    <div class="flex justify-between py-1 border-b border-slate-800 border-dashed">
-                        <span class="text-slate-400">Konektor (<span id="connVal">0</span> pcs x 0.3)</span>
-                        <span class="text-red-400 font-mono" id="lossConn">-0.00 dB</span>
-                    </div>
-                    <div class="flex justify-between py-1 pt-2 font-bold">
+                    <div class="flex justify-between py-3 mt-2 border-t border-white/10 font-bold bg-white/5 -mx-4 -mb-4 px-4">
                         <span class="text-slate-300">Total Loss Fisik</span>
-                        <span class="text-red-500 font-mono" id="totalPhysicalLoss">0.00 dB</span>
+                        <span class="text-red-500 font-mono text-sm" id="totalPhysicalLoss">0.00 dB</span>
                     </div>
                 </div>
 
                 <!-- Hasil Akhir -->
-                <div id="outputsList" class="space-y-3 pt-2">
+                <div id="outputsList" class="space-y-4 pt-3">
                     <!-- Dynamic Output Cards -->
                 </div>
             </div>
 
-            <div class="text-center pt-4">
-                <p class="text-[10px] text-slate-600">Dibuat untuk kebutuhan lapangan Teknisi Fiber Optik</p>
+            <div class="text-center pt-6 pb-2">
+                <p class="text-[10px] text-slate-500 font-medium">Dibuat untuk kebutuhan lapangan Teknisi Fiber Optik</p>
             </div>
 
         </div>
@@ -205,7 +258,7 @@
         }
 
         function getSignalColor(dbm) {
-            if (dbm > -10) return "text-green-400"; 
+            if (dbm > -10) return "text-emerald-400";
             if (dbm > -24) return "text-cyan-400";  
             if (dbm > -27) return "text-yellow-400"; 
             return "text-red-500"; 
@@ -256,19 +309,22 @@
             if (data.type === 'uniform') {
                 const finalOut = powerAfterPhysical - data.loss;
                 const html = `
-                    <div class="port-card p-4 rounded border-l-4 border-l-green-500 bg-slate-800 shadow-lg">
-                        <div class="flex justify-between text-xs text-slate-400 uppercase mb-2 border-b border-slate-700 pb-2">
-                            <span>Output (${data.label})</span>
+                    <div class="port-card p-5 rounded-xl border-l-4 border-l-emerald-500 bg-gradient-to-r from-emerald-500/10 to-transparent border border-white/5 shadow-lg relative overflow-hidden group">
+                        <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                             <i class="fa-solid fa-wifi text-6xl text-emerald-500"></i>
+                        </div>
+                        <div class="flex justify-between text-xs text-slate-400 uppercase mb-3 border-b border-white/5 pb-2 relative z-10">
+                            <span class="font-bold text-emerald-400">Output (${data.label})</span>
                             <span>Splitter: -${data.loss} dB</span>
                         </div>
-                        <div class="flex justify-between items-center">
+                        <div class="flex justify-between items-center relative z-10">
                             <div class="flex flex-col">
-                                <span class="text-[10px] text-slate-500">Estimasi Total</span>
-                                <span class="text-sm font-mono text-slate-300">-${(totalPhysicalLoss + data.loss).toFixed(2)} dB</span>
+                                <span class="text-[10px] text-slate-400 mb-1">Estimasi Total Loss</span>
+                                <span class="text-sm font-mono text-slate-200 bg-black/20 px-2 py-1 rounded w-fit">-${(totalPhysicalLoss + data.loss).toFixed(2)} dB</span>
                             </div>
                             <div class="text-right">
-                                <span class="text-xs text-slate-400 block">Sinyal Diterima</span>
-                                <span class="text-3xl font-bold font-mono ${getSignalColor(finalOut)}">${finalOut.toFixed(2)} dBm</span>
+                                <span class="text-xs text-slate-400 block mb-1">Sinyal Diterima</span>
+                                <span class="text-3xl font-bold font-mono ${getSignalColor(finalOut)} drop-shadow-md">${finalOut.toFixed(2)} dBm</span>
                             </div>
                         </div>
                     </div>`;
@@ -277,32 +333,32 @@
                 const out1 = powerAfterPhysical - data.loss1;
                 const out2 = powerAfterPhysical - data.loss2;
                 const html = `
-                    <div class="port-card p-3 rounded border-l-4 border-l-blue-500 bg-slate-800 shadow mb-3">
-                        <div class="flex justify-between text-xs text-slate-400 mb-1">
-                            <span>JALUR UTAMA (${data.name1})</span>
+                    <div class="port-card p-4 rounded-xl border-l-4 border-l-blue-500 bg-gradient-to-r from-blue-500/10 to-transparent border border-white/5 shadow mb-3 relative overflow-hidden">
+                        <div class="flex justify-between text-xs text-slate-400 mb-2 relative z-10">
+                            <span class="font-bold text-blue-400">JALUR UTAMA (${data.name1})</span>
                             <span>Splitter: -${data.loss1} dB</span>
                         </div>
-                        <div class="flex justify-between items-end">
+                        <div class="flex justify-between items-end relative z-10">
                              <span class="text-xs text-slate-500">Tot: -${(totalPhysicalLoss + data.loss1).toFixed(2)} dB</span>
                             <span class="text-2xl font-bold font-mono ${getSignalColor(out1)}">${out1.toFixed(2)} dBm</span>
                         </div>
                     </div>
-                    <div class="port-card p-3 rounded border-l-4 border-l-pink-500 bg-slate-800 shadow">
-                        <div class="flex justify-between text-xs text-slate-400 mb-1">
-                            <span>JALUR TAPPING (${data.name2})</span>
+                    <div class="port-card p-4 rounded-xl border-l-4 border-l-pink-500 bg-gradient-to-r from-pink-500/10 to-transparent border border-white/5 shadow relative overflow-hidden">
+                        <div class="flex justify-between text-xs text-slate-400 mb-2 relative z-10">
+                            <span class="font-bold text-pink-400">JALUR TAPPING (${data.name2})</span>
                             <span>Splitter: -${data.loss2} dB</span>
                         </div>
-                        <div class="flex justify-between items-end">
+                        <div class="flex justify-between items-end relative z-10">
                             <span class="text-xs text-slate-500">Tot: -${(totalPhysicalLoss + data.loss2).toFixed(2)} dB</span>
                             <span class="text-2xl font-bold font-mono ${getSignalColor(out2)}">${out2.toFixed(2)} dBm</span>
                         </div>
                     </div>`;
                 list.innerHTML = html;
             }
+
+            // Scroll to result
+             document.getElementById('resultContainer').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
     </script>
 </body>
 </html>
-
-
-
