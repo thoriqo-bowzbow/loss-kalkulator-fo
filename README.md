@@ -5,7 +5,7 @@ A dual-platform engineering tool (Web-based & CLI) designed to calculate optical
 ---
 
 ## 🚀 Live Demo
-**[CLICK HERE TO VIEW THE WEB CALCULATOR](https://riqolosskalkulator.netlify.app/)**
+**[CLICK HERE TO VIEW THE WEB CALCULATOR](https://kalkulator-redaman.riqo.biz.id/)**
 
 ---
 
