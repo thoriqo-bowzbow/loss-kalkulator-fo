@@ -74,6 +74,9 @@ export const en: Dict = {
   'export.pdf': 'Save PDF',
   'export.copied': 'Copied to clipboard',
   'export.shareCopied': 'Calculation link copied',
+  'export.savedPng': 'PNG report saved',
+  'export.savedPdf': 'PDF report saved',
+  'export.failed': 'Failed to save report',
 
   'history.title': 'Calculation History',
   'history.empty': 'No history yet. Press "Save" in the calculator to store one.',

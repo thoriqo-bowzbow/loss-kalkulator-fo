@@ -72,6 +72,9 @@ export const id = {
   'export.pdf': 'Simpan PDF',
   'export.copied': 'Disalin ke clipboard',
   'export.shareCopied': 'Link kalkulasi disalin',
+  'export.savedPng': 'Laporan PNG tersimpan',
+  'export.savedPdf': 'Laporan PDF tersimpan',
+  'export.failed': 'Gagal menyimpan laporan',
 
   'history.title': 'Riwayat Kalkulasi',
   'history.empty': 'Belum ada riwayat. Tekan "Simpan" di kalkulator untuk menyimpan.',

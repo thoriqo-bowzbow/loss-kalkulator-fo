@@ -44,27 +44,41 @@ export function ExportButtons({ topology, result, panelRef }: Props) {
     }
   };
 
-  const capture = async () => {
+  const capture = async (): Promise<HTMLCanvasElement | null> => {
     if (!panelRef.current || busy.current) return null;
     busy.current = true;
     try {
-      const { default: html2canvas } = await import('html2canvas');
-      return await html2canvas(panelRef.current, {
-        backgroundColor: null,
-        scale: Math.min(window.devicePixelRatio || 1, 2),
-      });
+      const { toCanvas } = await import('html-to-image');
+      return await toCanvas(panelRef.current, { pixelRatio: Math.min(window.devicePixelRatio || 1, 2) });
+    } catch (err) {
+      console.error('Report capture failed:', err);
+      toast(t('export.failed'), 'error');
+      return null;
     } finally {
       busy.current = false;
     }
   };
 
+  /** Triggers a real browser download into the user's local storage. */
+  const downloadBlob = (blob: Blob, filename: string) => {
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+  };
+
   const savePng = async () => {
     const canvas = await capture();
     if (!canvas) return;
-    const link = document.createElement('a');
-    link.download = `link-budget-${new Date().toISOString().slice(0, 10)}.png`;
-    link.href = canvas.toDataURL('image/png');
-    link.click();
+    canvas.toBlob((blob) => {
+      if (!blob) return void toast(t('export.failed'), 'error');
+      downloadBlob(blob, `link-budget-${new Date().toISOString().slice(0, 10)}.png`);
+      toast(t('export.savedPng'), 'success');
+    }, 'image/png');
   };
 
   const savePdf = async () => {
@@ -85,6 +99,7 @@ export function ExportButtons({ topology, result, panelRef }: Props) {
     pdf.text(new Date().toLocaleString(), margin, margin + 8);
     pdf.addImage(canvas.toDataURL('image/png'), 'PNG', margin, margin + 13, imgW, Math.min(imgH, pageH - margin * 2 - 14));
     pdf.save(`link-budget-${new Date().toISOString().slice(0, 10)}.pdf`);
+    toast(t('export.savedPdf'), 'success');
   };
 
   return (
