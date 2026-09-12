@@ -109,7 +109,7 @@ export function Select({
 }: React.SelectHTMLAttributes<HTMLSelectElement>) {
   return (
     <select
-      className={`w-full cursor-pointer rounded-none border-2 border-zinc-900 bg-zinc-50 px-3 py-1.5 text-sm font-semibold text-zinc-900 outline-none transition-shadow focus:shadow-[3px_3px_0_0_#06b6d4] dark:border-zinc-500 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:shadow-[3px_3px_0_0_#0e7490] ${className}`}
+      className={`w-full cursor-pointer rounded-none border-2 border-zinc-900 bg-zinc-50 px-2 py-1.5 text-[13px] font-semibold text-zinc-900 outline-none transition-shadow focus:shadow-[3px_3px_0_0_#06b6d4] dark:border-zinc-500 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:shadow-[3px_3px_0_0_#0e7490] ${className}`}
       {...props}
     >
       {children}
