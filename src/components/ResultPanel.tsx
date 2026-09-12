@@ -154,12 +154,12 @@ function PathCard({ path, weakestLabel }: { path: PathResult; weakestLabel: stri
 
   return (
     <Card className="animate-pop-in p-2">
-      <div className="-mx-2 -mt-2 mb-2 flex items-center justify-between gap-2 border-b-2 border-zinc-900 px-2 py-1.5 dark:border-zinc-600">
+      <div className="-mx-2 -mt-2 mb-2 flex flex-wrap items-center justify-between gap-x-2 gap-y-1 border-b-2 border-zinc-900 px-2 py-1.5 dark:border-zinc-600">
         <div className="min-w-0">
           <span className="text-xs font-black uppercase tracking-widest">{path.label}</span>
           <div className="truncate text-[10px] font-semibold text-zinc-400 dark:text-zinc-500">{chain}</div>
         </div>
-        <div className="flex shrink-0 items-center gap-1.5">
+        <div className="flex flex-wrap items-center gap-1.5">
           {path.isWeakest && (
             <Badge className="border-red-600 bg-red-600 text-white dark:border-red-500 dark:bg-red-500">
               {weakestLabel}

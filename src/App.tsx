@@ -97,12 +97,12 @@ function AppShell() {
         {/* Header */}
         <header className="mb-3 flex shrink-0 items-center justify-between gap-3 rounded-none border-2 border-zinc-900 bg-white p-3 shadow-[4px_4px_0_0_#18181b] dark:border-zinc-600 dark:bg-zinc-800 dark:shadow-[4px_4px_0_0_#09090b]">
           <div className="min-w-0">
-            <h1 className="flex items-center gap-2 text-base font-black uppercase tracking-tight sm:text-lg">
+            <h1 className="flex flex-wrap items-center gap-x-2 gap-y-1 text-base font-black uppercase tracking-tight sm:text-lg">
               <span className="text-cyan-500">📡</span>
               {t('app.title')}
               <Badge className="border-zinc-900 bg-yellow-300 text-zinc-900 dark:border-zinc-500 dark:bg-yellow-400 dark:text-zinc-900">v2.0</Badge>
             </h1>
-            <p className="truncate text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">{t('app.subtitle')}</p>
+            <p className="mt-0.5 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">{t('app.subtitle')}</p>
           </div>
           <div className="flex items-center gap-1.5">
             <Button
