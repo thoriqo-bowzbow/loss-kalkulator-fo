@@ -22,6 +22,8 @@ export const en: Dict = {
   'topo.title': 'Link Topology (OLT → ONT)',
   'topo.add': 'Add Segment',
   'topo.remove': 'Remove this segment',
+  'topo.moveUp': 'Move up',
+  'topo.moveDown': 'Move down',
   'topo.hint': 'Build the OLT → ONT topology. Any segment can branch from another; splitters sit at segment ends.',
 
   'segment.name': 'Segment Name',

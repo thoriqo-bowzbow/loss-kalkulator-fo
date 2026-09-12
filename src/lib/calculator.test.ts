@@ -121,7 +121,19 @@ describe('calculate — tree topologies', () => {
     expect(result.powerReceived).toBeCloseTo(-0.8, 5);
   });
 
-  it('tolerates parentId pointing to an unknown or later segment (falls back to legacy chain)', () => {
+  it('allows a parent located later in the array (list order is cosmetic)', () => {
+    const result = calculate(
+      makeTopology([
+        { id: 'x', name: 'X', distanceKm: 1, spliceCount: 0, connectorCount: 0, splitterId: null, parentId: 'y' },
+        { id: 'y', name: 'Y', distanceKm: 1, spliceCount: 0, connectorCount: 0, splitterId: null },
+      ]),
+    );
+    // X branches from Y even though Y sits after X in the list.
+    expect(result.segments[0].cumulativeLoss).toBeCloseTo(0.35 + 0.35, 5);
+    expect(result.segments[1].cumulativeLoss).toBeCloseTo(0.35, 5);
+  });
+
+  it('tolerates parentId pointing to an unknown segment (falls back to legacy chain)', () => {
     const result = calculate(
       makeTopology([
         { id: 'a', name: 'A', distanceKm: 1, spliceCount: 0, connectorCount: 0, splitterId: null },
@@ -130,6 +142,16 @@ describe('calculate — tree topologies', () => {
     );
     // 'ghost' is unknown → falls back to previous segment (linear).
     expect(result.segments[1].cumulativeLoss).toBeCloseTo(0.7, 5);
+  });
+
+  it('survives a parent cycle from bad data (does not hang or NaN)', () => {
+    const result = calculate(
+      makeTopology([
+        { id: 'a', name: 'A', distanceKm: 1, spliceCount: 0, connectorCount: 0, splitterId: null, parentId: 'b' },
+        { id: 'b', name: 'B', distanceKm: 1, spliceCount: 0, connectorCount: 0, splitterId: null, parentId: 'a' },
+      ]),
+    );
+    expect(Number.isFinite(result.margin)).toBe(true);
   });
 });
 

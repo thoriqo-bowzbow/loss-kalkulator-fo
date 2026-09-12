@@ -1,4 +1,4 @@
-import { Network, Plus, Trash2 } from 'lucide-react';
+import { ChevronDown, ChevronUp, Network, Plus, Trash2 } from 'lucide-react';
 import { useI18n } from '../i18n/I18nContext';
 import type { Segment, Splitter } from '../lib/types';
 import { Button, Card, DecimalInput, Label, SectionTitle, Select, TextInput } from './ui/primitives';
@@ -12,18 +12,22 @@ interface SegmentCardProps {
   invalidDistance: boolean;
   onChange: (patch: Partial<Segment>) => void;
   onRemove: () => void;
+  onMove: (direction: -1 | 1) => void;
 }
 
 export function SegmentCard({
   segment,
   index,
-  splitters,
+  total,
   segments,
+  splitters,
   invalidDistance,
   onChange,
   onRemove,
+  onMove,
 }: SegmentCardProps) {
   const { t } = useI18n();
+  const candidateParents = segments.filter((s) => s.id !== segment.id);
 
   return (
     <Card className="animate-fade-up p-3">
@@ -39,9 +43,31 @@ export function SegmentCard({
             className="font-black uppercase"
           />
         </div>
-        <Button variant="danger" onClick={onRemove} title={t('topo.remove')} aria-label={t('topo.remove')}>
-          <Trash2 className="h-4 w-4" />
-        </Button>
+        <div className="flex shrink-0 items-center gap-1">
+          <Button
+            variant="ghost"
+            onClick={() => onMove(-1)}
+            disabled={index === 0}
+            title={t('topo.moveUp')}
+            aria-label={t('topo.moveUp')}
+            className="px-1.5"
+          >
+            <ChevronUp className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            onClick={() => onMove(1)}
+            disabled={index === total - 1}
+            title={t('topo.moveDown')}
+            aria-label={t('topo.moveDown')}
+            className="px-1.5"
+          >
+            <ChevronDown className="h-4 w-4" />
+          </Button>
+          <Button variant="danger" onClick={onRemove} title={t('topo.remove')} aria-label={t('topo.remove')}>
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
@@ -52,9 +78,9 @@ export function SegmentCard({
               value={segment.parentId ?? segments[index - 1]?.id ?? ''}
               onChange={(e) => onChange({ parentId: e.target.value })}
             >
-              {segments.slice(0, index).map((s, i) => (
+              {candidateParents.map((s) => (
                 <option key={s.id} value={s.id}>
-                  {s.name || `#${i + 1}`}
+                  {s.name || `#${segments.indexOf(s) + 1}`}
                 </option>
               ))}
             </Select>
@@ -115,8 +141,36 @@ export function TopologyBuilder({ segments, splitters, onChange }: TopologyBuild
   const addSegment = () =>
     onChange([...segments, newSegment(segments.length > 0 ? segments[segments.length - 1].id : null)]);
 
+  /** Rejects a parent choice that would create a cycle (candidate is a descendant). */
+  const isSafeParent = (segmentId: string, candidateId: string): boolean => {
+    let current: Segment | undefined = segments.find((s) => s.id === candidateId);
+    const seen = new Set<string>([segmentId]);
+    while (current) {
+      const node = current;
+      if (seen.has(node.id)) return false;
+      seen.add(node.id);
+      const idx = segments.indexOf(node);
+      current = node.parentId != null ? segments.find((s) => s.id === node.parentId) : (segments[idx - 1] ?? undefined);
+    }
+    return true;
+  };
+
   const updateSegment = (id: string, patch: Partial<Segment>) =>
     onChange(segments.map((s) => (s.id === id ? { ...s, ...patch } : s)));
+
+  const patchSegment = (id: string, patch: Partial<Segment>) => {
+    if (patch.parentId != null && !isSafeParent(id, patch.parentId)) return;
+    updateSegment(id, patch);
+  };
+
+  /** Reorders the list only — parent links (and the tree) stay untouched. */
+  const moveSegment = (index: number, direction: -1 | 1) => {
+    const target = index + direction;
+    if (target < 0 || target >= segments.length) return;
+    const next = [...segments];
+    [next[index], next[target]] = [next[target], next[index]];
+    onChange(next);
+  };
 
   const removeSegment = (id: string) => {
     const removed = segments.find((s) => s.id === id);
@@ -147,8 +201,9 @@ export function TopologyBuilder({ segments, splitters, onChange }: TopologyBuild
           segments={segments}
           splitters={splitters}
           invalidDistance={false}
-          onChange={(patch) => updateSegment(segment.id, patch)}
+          onChange={(patch) => patchSegment(segment.id, patch)}
           onRemove={() => removeSegment(segment.id)}
+          onMove={(direction) => moveSegment(i, direction)}
         />
       ))}
 

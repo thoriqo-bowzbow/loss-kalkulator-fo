@@ -18,6 +18,7 @@ interface TreeNodeData {
 function buildTree(topology: Topology, results: SegmentResult[]): TreeNodeData[] {
   const resultById = new Map(results.map((r) => [r.segmentId, r]));
   const indexById = new Map(topology.segments.map((s, idx) => [s.id, idx]));
+  const nodeById = new Map(topology.segments.map((s) => [s.id, s]));
 
   const nodes = new Map<string, TreeNodeData>();
   topology.segments.forEach((segment) => {
@@ -28,17 +29,39 @@ function buildTree(topology: Topology, results: SegmentResult[]): TreeNodeData[]
     });
   });
 
+  // Resolve intended parent for every node; segments in a parent cycle become roots.
+  const cyclic = new Set<string>();
+  topology.segments.forEach((segment) => {
+    const seen = new Set<string>([segment.id]);
+    let current = segment;
+    for (;;) {
+      let parent: Segment | undefined;
+      if (current.parentId != null) parent = nodeById.get(current.parentId);
+      else {
+        const idx = indexById.get(current.id) ?? 0;
+        parent = idx > 0 ? topology.segments[idx - 1] : undefined;
+      }
+      if (!parent) break;
+      if (seen.has(parent.id)) {
+        cyclic.add(segment.id);
+        break;
+      }
+      seen.add(parent.id);
+      current = parent;
+    }
+  });
+
   const roots: TreeNodeData[] = [];
   topology.segments.forEach((segment, idx) => {
+    if (cyclic.has(segment.id)) {
+      roots.push(nodes.get(segment.id)!);
+      return;
+    }
     const node = nodes.get(segment.id)!;
     let parent: TreeNodeData | undefined;
-    if (segment.parentId != null) {
-      const parentIdx = indexById.get(segment.parentId);
-      if (parentIdx != null && parentIdx < idx) parent = nodes.get(segment.parentId);
-    } else if (idx > 0) {
-      parent = nodes.get(topology.segments[idx - 1].id);
-    }
-    if (parent) parent.children.push(node);
+    if (segment.parentId != null) parent = nodes.get(segment.parentId);
+    else if (idx > 0) parent = nodes.get(topology.segments[idx - 1].id);
+    if (parent && parent !== node) parent.children.push(node);
     else roots.push(node);
   });
 

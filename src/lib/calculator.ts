@@ -52,15 +52,16 @@ export function calculate(topology: Topology, constants: LossConstants = DEFAULT
 
   const segments = topology.segments;
   const indexById = new Map(segments.map((s, idx) => [s.id, idx]));
+  const byId = new Map(segments.map((s) => [s.id, s]));
 
+  // Parent may sit anywhere in the array (list order is cosmetic); cycle-guarded upstream.
   const parentOf = (s: Segment): Segment | null => {
-    const idx = indexById.get(s.id) ?? 0;
     if (s.parentId != null) {
-      const parentIdx = indexById.get(s.parentId);
-      // Only earlier segments may be parents — prevents cycles from bad data.
-      if (parentIdx != null && parentIdx < idx) return segments[parentIdx];
+      const parent = byId.get(s.parentId);
+      if (parent) return parent;
     }
     // No (valid) parent: legacy behaviour — continue from the previous segment.
+    const idx = indexById.get(s.id) ?? 0;
     return idx > 0 ? segments[idx - 1] : null;
   };
 

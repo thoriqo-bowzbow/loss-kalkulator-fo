@@ -20,6 +20,8 @@ export const id = {
   'topo.title': 'Topologi Link (OLT → ONT)',
   'topo.add': 'Tambah Segmen',
   'topo.remove': 'Hapus segmen ini',
+  'topo.moveUp': 'Naikkan urutan',
+  'topo.moveDown': 'Turunkan urutan',
   'topo.hint': 'Susun topologi OLT → ONT. Setiap segmen bisa dicabangkan dari segmen lain; splitter dipasang di ujung segmen.',
 
   'segment.name': 'Nama Segmen',
