@@ -2,3 +2,6 @@ node_modules/
 dist/
 tsconfig.tsbuildinfo
 *.local
+
+# Command Code local settings (session tools, taste learning)
+.commandcode/
