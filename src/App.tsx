@@ -100,7 +100,7 @@ function AppShell() {
             <h1 className="flex items-center gap-2 text-base font-black uppercase tracking-tight sm:text-lg">
               <span className="text-cyan-500">📡</span>
               {t('app.title')}
-              <Badge className="border-zinc-900 bg-yellow-300 text-zinc-900 dark:border-zinc-500 dark:bg-yellow-400 dark:text-zinc-900">v2</Badge>
+              <Badge className="border-zinc-900 bg-yellow-300 text-zinc-900 dark:border-zinc-500 dark:bg-yellow-400 dark:text-zinc-900">v2.0</Badge>
             </h1>
             <p className="truncate text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">{t('app.subtitle')}</p>
           </div>
