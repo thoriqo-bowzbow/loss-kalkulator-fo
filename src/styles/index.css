@@ -35,13 +35,13 @@ body {
   font-family: var(--font-sans);
 }
 
-/* Pointer hand cursor on interactive elements; text cursor on inputs; not-allowed when disabled */
+/* Brutalist mint arrow cursor on interactive elements; text cursor on inputs; not-allowed when disabled */
 button:not(:disabled),
 select:not(:disabled),
 a,
 [role='button']:not([aria-disabled='true']) {
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28'%3E%3Ctext x='2' y='24' font-size='22'%3E%F0%9F%91%86%3C/text%3E%3C/svg%3E")
-      13 3,
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 32 32'%3E%3Cpath d='M8 7 L8 28 L14 22.4 L18.2 32.4 L22.6 30.4 L18.4 21.4 L25.4 21.4 Z' fill='%231fa06d' stroke='black' stroke-width='1.6' stroke-linejoin='round'/%3E%3Cpath d='M5 4 L5 25 L11 19.4 L15.2 29.4 L19.6 27.4 L15.4 18.4 L22.4 18.4 Z' fill='%234fe3a1' stroke='black' stroke-width='1.6' stroke-linejoin='round'/%3E%3C/svg%3E")
+      5 4,
     pointer;
 }
 
