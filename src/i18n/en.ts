@@ -25,11 +25,11 @@ export const en: Dict = {
   'topo.hint': 'Build the OLT → ONT topology. Any segment can branch from another; splitters sit at segment ends.',
 
   'segment.name': 'Segment Name',
-  'segment.from': 'Connected from',
+  'segment.from': 'From',
   'segment.distance': 'Cable (km)',
   'segment.splice': 'Splices',
   'segment.connector': 'Connectors',
-  'segment.splitter': 'Splitter (end)',
+  'segment.splitter': 'Splitter',
   'segment.splitterNone': 'Direct',
 
   'result.title': 'Loss Budget Breakdown',

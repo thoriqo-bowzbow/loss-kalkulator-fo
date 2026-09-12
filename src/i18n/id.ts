@@ -23,11 +23,11 @@ export const id = {
   'topo.hint': 'Susun topologi OLT → ONT. Setiap segmen bisa dicabangkan dari segmen lain; splitter dipasang di ujung segmen.',
 
   'segment.name': 'Nama Segmen',
-  'segment.from': 'Terhubung dari',
+  'segment.from': 'Dari',
   'segment.distance': 'Kabel (km)',
-  'segment.splice': 'Splicing (titik)',
-  'segment.connector': 'Konektor (pcs)',
-  'segment.splitter': 'Splitter (ujung)',
+  'segment.splice': 'Splicing',
+  'segment.connector': 'Konektor',
+  'segment.splitter': 'Splitter',
   'segment.splitterNone': 'Direct',
 
   'result.title': 'Rincian Loss Budget',
