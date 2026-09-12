@@ -54,7 +54,7 @@ interface TextInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 export function TextInput({ invalid = false, className = '', ...props }: TextInputProps) {
   return (
     <input
-      className={`w-full rounded-none border-2 bg-zinc-50 px-3 py-1.5 text-sm font-semibold text-zinc-900 outline-none transition-shadow placeholder:font-normal placeholder:text-zinc-400 focus:shadow-[3px_3px_0_0_#06b6d4] dark:border-zinc-500 dark:bg-zinc-900 dark:text-zinc-50 dark:placeholder:text-zinc-500 dark:focus:shadow-[3px_3px_0_0_#0e7490] ${
+      className={`w-full min-w-0 rounded-none border-2 bg-zinc-50 px-3 py-1.5 text-sm font-semibold text-zinc-900 outline-none transition-shadow placeholder:font-normal placeholder:text-zinc-400 focus:shadow-[3px_3px_0_0_#06b6d4] dark:border-zinc-500 dark:bg-zinc-900 dark:text-zinc-50 dark:placeholder:text-zinc-500 dark:focus:shadow-[3px_3px_0_0_#0e7490] ${
         invalid
           ? 'border-red-600'
           : 'border-zinc-900 dark:border-zinc-500'
@@ -109,7 +109,7 @@ export function Select({
 }: React.SelectHTMLAttributes<HTMLSelectElement>) {
   return (
     <select
-      className={`w-full cursor-pointer rounded-none border-2 border-zinc-900 bg-zinc-50 px-2 py-1.5 text-[13px] font-semibold text-zinc-900 outline-none transition-shadow focus:shadow-[3px_3px_0_0_#06b6d4] dark:border-zinc-500 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:shadow-[3px_3px_0_0_#0e7490] ${className}`}
+      className={`w-full min-w-0 cursor-pointer rounded-none border-2 border-zinc-900 bg-zinc-50 px-2 py-1.5 text-[13px] font-semibold text-zinc-900 outline-none transition-shadow focus:shadow-[3px_3px_0_0_#06b6d4] dark:border-zinc-500 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:shadow-[3px_3px_0_0_#0e7490] ${className}`}
       {...props}
     >
       {children}

@@ -140,7 +140,7 @@ function AppShell() {
 
         {tab === 'calculator' && (
           <main className="grid gap-3 lg:min-h-0 lg:flex-1 lg:grid-cols-2">
-            <div className="space-y-3 lg:min-h-0 lg:overflow-y-auto lg:pr-1">
+            <div className="min-w-0 space-y-3 lg:min-h-0 lg:overflow-y-auto lg:pr-1">
               <PowerInput
                 topology={topology}
                 fiberTypes={constants.fiberTypes}
@@ -154,7 +154,7 @@ function AppShell() {
                 onChange={(segments) => patchTopology({ segments })}
               />
             </div>
-            <div className="space-y-3 lg:min-h-0 lg:overflow-y-auto lg:pr-1">
+            <div className="min-w-0 space-y-3 lg:min-h-0 lg:overflow-y-auto lg:pr-1">
               <ResultPanel ref={resultRef} topology={topology} result={result} />
               {result.segments.length > 0 && (
                 <>
