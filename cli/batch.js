@@ -1,5 +1,5 @@
 import { readFile } from 'node:fs/promises';
-import { getSplitter } from './core.js';
+import { lookupSplitter } from './core.js';
 
 const CSV_HEADER = ['name', 'tx', 'km', 'splice', 'conn', 'splitter', 'rx'];
 
@@ -55,8 +55,8 @@ function toTopology(record) {
   if (tx == null) throw new Error(`[${name}] kolom tx tidak valid.`);
   const rx = toNumber(record.rx);
   if (rx == null) throw new Error(`[${name}] kolom rx tidak valid.`);
-  const splitterId = record.splitter && getSplitter(record.splitter) ? record.splitter : 'none';
-  if (record.splitter && !getSplitter(record.splitter)) {
+  const splitterId = record.splitter && lookupSplitter(record.splitter) ? lookupSplitter(record.splitter).id : 'none';
+  if (record.splitter && !lookupSplitter(record.splitter)) {
     console.warn(`  ⚠ [${name}] splitter "${record.splitter}" tidak dikenal — dipakai Direct.`);
   }
 

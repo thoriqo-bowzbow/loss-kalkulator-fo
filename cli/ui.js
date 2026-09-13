@@ -1,6 +1,6 @@
 // UI terminal: warna ANSI (hanya yang dipakai), banner, prompt, tabel hasil.
 
-import { getFiberType, getOpticalClass, getSplitter } from './core.js';
+import { FIBER_TYPES, OPTICAL_CLASSES, SPLITTERS, getOpticalClass } from './core.js';
 
 const Fg = {
   reset: '\x1b[0m',
@@ -47,10 +47,13 @@ export function renderProgressSummary(topology, segments = []) {
   const cls = topology.opticalClassId && topology.opticalClassId !== 'custom' ? ` (${getOpticalClass(topology.opticalClassId).label})` : '';
   console.log(colors.gray('─'.repeat(44)));
   console.log(`  TX ${colors.yellow(String(topology.tx))} dBm · RX ${colors.yellow(String(topology.rx))} dBm · ${topology.wavelength} nm${cls}`);
-  console.log(`  Fiber: ${getFiberType(topology.fiberTypeId).label}`);
+  const fiber = FIBER_TYPES.find((f) => f.id === topology.fiberTypeId) ?? FIBER_TYPES[0];
+  console.log(`  Fiber: ${fiber.label}`);
   if (segments.length > 0) {
     segments.forEach((s, i) => {
-      console.log(`  ${colors.gray(`${i + 1}.`)} ${colors.bold(s.name)}  ${colors.gray(`${s.km} km · ${s.splice} splice · ${s.conn} konektor · ${getSplitter(s.splitterId)?.label ?? 'Direct'}`)}`);
+      const splitter = SPLITTERS.find((sp) => sp.id === s.splitterId);
+      const splitterLabel = splitter && splitter.id !== 'none' ? splitter.label : 'Direct';
+      console.log(`  ${colors.gray(`${i + 1}.`)} ${colors.bold(s.name)}  ${colors.gray(`${s.km} km · ${s.splice} splice · ${s.conn} konektor · ${splitterLabel}`)}`);
     });
   } else {
     console.log(colors.gray('  (belum ada segmen)'));
@@ -144,8 +147,8 @@ export function renderResult(result) {
   p();
   p(colors.bold('═══ HASIL PERHITUNGAN ═══'));
   p();
-  p(`  TX Power       : ${colors.yellow(fmt(result.tx, 'dBm'))}`);
-  p(`  RX Sensitivity : ${fmt(result.rx, 'dBm')}`);
+  p(`  TX Power       : ${colors.yellow(fmt(result.txPower, 'dBm'))}`);
+  p(`  RX Sensitivity : ${fmt(result.rxSensitivity, 'dBm')}`);
   p(`  Gelombang      : ${result.wavelength} nm`);
   p(`  Tipe Fiber     : ${result.fiberType.label}`);
   p();

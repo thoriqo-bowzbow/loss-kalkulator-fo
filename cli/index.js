@@ -9,7 +9,7 @@ import {
   calculate,
   buildSummary,
   getOpticalClass,
-  getSplitter,
+  lookupSplitter,
   OPTICAL_CLASSES,
   WAVELENGTHS,
   FIBER_TYPES,
@@ -89,11 +89,11 @@ async function runOneShot() {
         km: parseDecimal(String(options.km)) ?? 0,
         splice: parseDecimal(String(options.splice)) ?? 0,
         conn: parseDecimal(String(options.conn)) ?? 0,
-        splitterId: getSplitter(options.splitter) ? options.splitter : 'none',
+        splitterId: lookupSplitter(options.splitter) ? lookupSplitter(options.splitter).id : 'none',
       },
     ],
   };
-  if (options.splitter && !getSplitter(options.splitter)) {
+  if (options.splitter && !lookupSplitter(options.splitter)) {
     console.log(colors.yellow(`⚠ Splitter "${options.splitter}" tidak dikenal — dipakai Direct.`));
     console.log(colors.gray('  Label yang tersedia: ' + SPLITTERS.filter((s) => s.id !== 'none').map((s) => s.label).join(', ')));
   }
@@ -132,7 +132,7 @@ async function runWizard(prompter, prefill = null) {
   // 1. Kelas optik
   step();
   console.log(colors.bold('KELAS OPTIK:'));
-  OPTICAL_CLASSES.forEach((cls, i) => console.log(`  ${i + 1}. ${cls.label}${cls.id !== 'custom' ? colors.gray(` (TX ${cls.tx} dBm / RX ${cls.rx} dBm)`) : ''}`));
+  OPTICAL_CLASSES.forEach((cls, i) => console.log(`  ${i + 1}. ${cls.label}${cls.id !== 'custom' ? colors.gray(` (TX ${cls.txPower} dBm / RX ${cls.rxSensitivity} dBm)`) : ''}`));
   const classChoice = await prompter.ask(`Pilih kelas optik [1-${OPTICAL_CLASSES.length}] (default 1 = Custom):`, {
     transform: (v) => (v === '' ? '1' : v),
     validate: (v) => {
@@ -143,8 +143,8 @@ async function runWizard(prompter, prefill = null) {
   const opticalClass = getOpticalClass(OPTICAL_CLASSES[Number.parseInt(classChoice, 10) - 1].id);
   topology.opticalClassId = opticalClass.id;
   if (opticalClass.id !== 'custom') {
-    topology.tx = opticalClass.tx;
-    topology.rx = opticalClass.rx;
+    topology.tx = opticalClass.txPower;
+    topology.rx = opticalClass.rxSensitivity;
   }
 
   // 2. TX / RX
@@ -218,8 +218,9 @@ async function runWizard(prompter, prefill = null) {
     console.log(colors.bold(`SEGMEN #${index + 1} — ${name}:`));
     console.log(colors.bold('SPLITTER DI UJUNG SEGMEN:'));
     SPLITTERS.forEach((s, i) => {
-      const lossText = s.kind === 'ratio' ? `${s.lossMain}/${s.lossTap} dB (utama/tap)` : `${s.loss} dB`;
-      console.log(`  ${i + 1}. ${s.label} ${colors.gray(`(${lossText})`)}`);
+      const displayLabel = s.id === 'none' ? 'Direct' : s.label;
+      const lossText = s.kind === 'ratio' ? `${s.loss1}/${s.loss2} dB (utama/tap)` : `${s.loss} dB`;
+      console.log(`  ${i + 1}. ${displayLabel} ${colors.gray(`(${lossText})`)}`);
     });
     const splitterChoice = await prompter.ask(`Pilih splitter [1-${SPLITTERS.length}] (default 1 = Direct):`, {
       transform: (v) => (v === '' ? '1' : v),

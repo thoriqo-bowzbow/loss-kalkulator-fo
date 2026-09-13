@@ -24,9 +24,9 @@ describe('calculate — kasus referensi (paritas dengan web)', () => {
     expect(r.totalLoss).toBeCloseTo(10 * 0.22 + 0.5 + 1.2 + 10.5, 5);
   });
 
-  it('tipe fiber G.657.A memakai atenuasi 0.37 dB/km di 1310 nm', () => {
+  it('tipe fiber G.657.A memakai atenuasi katalog di 1310 nm', () => {
     const r = calculate({ ...REFERENCE, fiberTypeId: 'g657a' });
-    expect(r.segments[0].cableLoss).toBeCloseTo(10 * 0.37, 5);
+    expect(r.segments[0].cableLoss).toBeCloseTo(10 * 0.35, 5);
   });
 });
 
@@ -103,9 +103,9 @@ describe('validasi input', () => {
 });
 
 describe('helper', () => {
-  it('getOpticalClass mengembalikan preset TX/RX', () => {
-    expect(getOpticalClass('gpon-cplus').tx).toBe(10);
-    expect(getOpticalClass('gpon-cplus').rx).toBe(-30);
-    expect(getOpticalClass('tidak-ada').label).toBe('Custom');
+  it('getOpticalClass mengembalikan preset TX/RX (katalog shared)', () => {
+    expect(getOpticalClass('gpon-c').txPower).toBe(5);
+    expect(getOpticalClass('gpon-c').rxSensitivity).toBe(-32);
+    expect(getOpticalClass('tidak-ada').label).toBe('custom');
   });
 });
