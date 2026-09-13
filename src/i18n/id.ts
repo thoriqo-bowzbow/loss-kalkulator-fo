@@ -1,7 +1,6 @@
 export const id = {
   'app.title': 'Link Budget Calculator',
   'app.subtitle': 'Versi Engineer v2 — Loss Fisik & Aksesoris',
-  'app.online': 'SIAP',
   'tab.calculator': 'Kalkulator',
   'tab.history': 'Riwayat',
   'tab.settings': 'Pengaturan',
@@ -45,8 +44,6 @@ export const id = {
   'result.perSegment': 'Per Segmen',
   'result.received': 'Sinyal Diterima',
   'result.margin': 'Margin (vs sensitivity)',
-  'result.pathMain': 'Jalur Utama',
-  'result.pathTap': 'Jalur Tapping',
   'result.weakest': 'Terlemah',
   'result.taps': 'Jalur Tap FBT',
   'result.olt': 'OLT',
@@ -78,7 +75,6 @@ export const id = {
   'export.savedPdf': 'Laporan PDF tersimpan',
   'export.failed': 'Gagal menyimpan laporan',
 
-  'history.title': 'Riwayat Kalkulasi',
   'history.empty': 'Belum ada riwayat. Tekan "Simpan" di kalkulator untuk menyimpan.',
   'history.save': 'Simpan',
   'history.saved': 'Kalkulasi disimpan',
@@ -96,12 +92,9 @@ export const id = {
   'settings.fbtTap': 'jalur tap',
   'settings.reset': 'Reset ke Default',
   'settings.resetDone': 'Konstanta dikembalikan ke default',
-  'settings.saved': 'Konstanta tersimpan',
 
-  'common.km': 'km',
   'common.db': 'dB',
   'common.dbm': 'dBm',
-  'common.pcs': 'pcs',
 } as const;
 
 export type I18nKey = keyof typeof id;

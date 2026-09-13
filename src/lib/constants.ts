@@ -1,11 +1,11 @@
 import type { FiberType, LossConstants, OpticalClass, Splitter, Wavelength } from './types';
 
-export const DEFAULT_SPLICE_LOSS = 0.1;
-export const DEFAULT_CONNECTOR_LOSS = 0.3;
+const DEFAULT_SPLICE_LOSS = 0.1;
+const DEFAULT_CONNECTOR_LOSS = 0.3;
 
 export const WAVELENGTHS: Wavelength[] = [1310, 1490, 1550];
 
-export const DEFAULT_FIBER_TYPES: FiberType[] = [
+const DEFAULT_FIBER_TYPES: FiberType[] = [
   {
     id: 'g652d',
     label: 'G.652.D (Standard)',

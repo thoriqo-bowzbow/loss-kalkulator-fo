@@ -2,7 +2,7 @@ import type { Topology } from './types';
 
 const PREFIX = '#/calc=';
 
-export function encodeTopology(topology: Topology): string {
+function encodeTopology(topology: Topology): string {
   const json = JSON.stringify(topology);
   return btoa(unescape(encodeURIComponent(json)));
 }

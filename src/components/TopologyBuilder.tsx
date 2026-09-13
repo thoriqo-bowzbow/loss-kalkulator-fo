@@ -15,7 +15,7 @@ interface SegmentCardProps {
   onMove: (direction: -1 | 1) => void;
 }
 
-export function SegmentCard({
+function SegmentCard({
   segment,
   index,
   total,

@@ -3,7 +3,6 @@ import type { Dict } from './id';
 export const en: Dict = {
   'app.title': 'Link Budget Calculator',
   'app.subtitle': 'Engineer Edition v2 — Physical & Accessory Loss',
-  'app.online': 'READY',
   'tab.calculator': 'Calculator',
   'tab.history': 'History',
   'tab.settings': 'Settings',
@@ -47,8 +46,6 @@ export const en: Dict = {
   'result.perSegment': 'Per Segment',
   'result.received': 'Received Signal',
   'result.margin': 'Margin (vs sensitivity)',
-  'result.pathMain': 'Main Path',
-  'result.pathTap': 'Tapped Path',
   'result.weakest': 'Weakest',
   'result.taps': 'FBT Tapped Paths',
   'result.olt': 'OLT',
@@ -80,7 +77,6 @@ export const en: Dict = {
   'export.savedPdf': 'PDF report saved',
   'export.failed': 'Failed to save report',
 
-  'history.title': 'Calculation History',
   'history.empty': 'No history yet. Press "Save" in the calculator to store one.',
   'history.save': 'Save',
   'history.saved': 'Calculation saved',
@@ -98,10 +94,7 @@ export const en: Dict = {
   'settings.fbtTap': 'tap path',
   'settings.reset': 'Reset to Defaults',
   'settings.resetDone': 'Constants reset to defaults',
-  'settings.saved': 'Constants saved',
 
-  'common.km': 'km',
   'common.db': 'dB',
   'common.dbm': 'dBm',
-  'common.pcs': 'pcs',
 };

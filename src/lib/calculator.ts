@@ -11,11 +11,11 @@ import type {
   Verdict,
 } from './types';
 
-export function getFiberType(constants: LossConstants, id: string): FiberType {
+function getFiberType(constants: LossConstants, id: string): FiberType {
   return constants.fiberTypes.find((f) => f.id === id) ?? constants.fiberTypes[0];
 }
 
-export function getSplitter(constants: LossConstants, id: string | null): Splitter | null {
+function getSplitter(constants: LossConstants, id: string | null): Splitter | null {
   if (!id) return null;
   return constants.splitters.find((s) => s.id === id) ?? null;
 }
@@ -24,7 +24,7 @@ export function getOpticalClass(id: string | null) {
   return OPTICAL_CLASSES.find((c) => c.id === id) ?? OPTICAL_CLASSES[0];
 }
 
-export function clampNumber(value: number, max: number): number {
+function clampNumber(value: number, max: number): number {
   if (!Number.isFinite(value)) return 0;
   return Math.min(Math.max(value, 0), max);
 }
