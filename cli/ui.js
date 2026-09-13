@@ -79,7 +79,10 @@ export function createPrompter(rl) {
     /** Prompt yang menolak input kosong dan mengulang sampai valid. */
     async ask(question, { validate, transform = (v) => v } = {}) {
       for (;;) {
-        process.stdout.write(colors.cyan('❓ ') + question + ' ');
+        // setPrompt + prompt() membuat readline mengelola baris input
+        // (backspace tidak ikut menghapus teks pertanyaan).
+        rl.setPrompt(colors.cyan('❓ ') + question + ' ');
+        rl.prompt();
         const raw = buffer.length > 0 ? buffer.shift() : await new Promise((resolve) => waiters.push(resolve));
         if (raw === null) throw new Error('Input berakhir sebelum selesai (EOF).');
         const value = transform(raw.trim());
