@@ -1,5 +1,7 @@
 // UI terminal: warna ANSI (hanya yang dipakai), banner, prompt, tabel hasil.
 
+import { getFiberType, getOpticalClass, getSplitter } from './core.js';
+
 const Fg = {
   reset: '\x1b[0m',
   bright: '\x1b[1m',
@@ -33,6 +35,27 @@ export function displayBanner() {
   console.log(colors.cyan('║ ') + colors.mint('LOSS KALKULATOR FO') + colors.gray('  CLI v2.0'.padEnd(20)) + colors.cyan('║'));
   console.log(colors.cyan('╚══════════════════════════════════════════╝'));
   console.log(colors.gray('Kalkulator loss fiber optik multi-segmen\n'));
+}
+
+/** Bersihkan layar (hanya pada TTY; dilewati saat --plain agar log tetap utuh). */
+export function clearScreen() {
+  if (colorEnabled && process.stdout.isTTY) process.stdout.write('\x1b[2J\x1b[H');
+}
+
+/** Ringkasan singkat konfigurasi yang sudah dipilih — tampil di atas setiap langkah wizard. */
+export function renderProgressSummary(topology, segments = []) {
+  const cls = topology.opticalClassId && topology.opticalClassId !== 'custom' ? ` (${getOpticalClass(topology.opticalClassId).label})` : '';
+  console.log(colors.gray('─'.repeat(44)));
+  console.log(`  TX ${colors.yellow(String(topology.tx))} dBm · RX ${colors.yellow(String(topology.rx))} dBm · ${topology.wavelength} nm${cls}`);
+  console.log(`  Fiber: ${getFiberType(topology.fiberTypeId).label}`);
+  if (segments.length > 0) {
+    segments.forEach((s, i) => {
+      console.log(`  ${colors.gray(`${i + 1}.`)} ${colors.bold(s.name)}  ${colors.gray(`${s.km} km · ${s.splice} splice · ${s.conn} konektor · ${getSplitter(s.splitterId)?.label ?? 'Direct'}`)}`);
+    });
+  } else {
+    console.log(colors.gray('  (belum ada segmen)'));
+  }
+  console.log(colors.gray('─'.repeat(44)));
 }
 
 /**

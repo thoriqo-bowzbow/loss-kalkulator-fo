@@ -15,7 +15,7 @@ import {
   FIBER_TYPES,
   SPLITTERS,
 } from './core.js';
-import { createPrompter, displayBanner, parseDecimal, renderResult, renderBatchTable, colors } from './ui.js';
+import { createPrompter, clearScreen, displayBanner, parseDecimal, renderResult, renderBatchTable, renderProgressSummary, colors } from './ui.js';
 import { readBatch } from './batch.js';
 import { addEntry, listEntries, getEntry, clearEntries, historyPath } from './history.js';
 
@@ -118,15 +118,22 @@ async function runWizard(prompter, prefill = null) {
 
   if (prefill) {
     topology = prefill.topology ?? prefill;
-    console.log(colors.gray(`Memuat riwayat "${prefill.name ?? 'ENTRI'}" — silakan sesuaikan bila perlu.\n`));
+    topology.opticalClassId = topology.opticalClassId ?? 'custom';
   } else {
-    topology = { tx: 7, rx: -27, wavelength: 1310, fiberTypeId: 'g652d', segments: [] };
+    topology = { tx: 7, rx: -27, wavelength: 1310, fiberTypeId: 'g652d', opticalClassId: 'custom', segments: [] };
   }
 
-  // Kelas optik
+  // Setiap langkah: bersihkan layar → ringkasan progres → pertanyaan berikutnya.
+  const step = () => {
+    clearScreen();
+    renderProgressSummary(topology, topology.segments);
+  };
+
+  // 1. Kelas optik
+  step();
   console.log(colors.bold('KELAS OPTIK:'));
   OPTICAL_CLASSES.forEach((cls, i) => console.log(`  ${i + 1}. ${cls.label}${cls.id !== 'custom' ? colors.gray(` (TX ${cls.tx} dBm / RX ${cls.rx} dBm)`) : ''}`));
-  const classChoice = await prompter.ask(`Pilih kelas optik [1-${OPTICAL_CLASSES.length}]${prefill ? '' : ' (default 1 = Custom)'}:`, {
+  const classChoice = await prompter.ask(`Pilih kelas optik [1-${OPTICAL_CLASSES.length}] (default 1 = Custom):`, {
     transform: (v) => (v === '' ? '1' : v),
     validate: (v) => {
       const n = Number.parseInt(v, 10);
@@ -134,33 +141,38 @@ async function runWizard(prompter, prefill = null) {
     },
   });
   const opticalClass = getOpticalClass(OPTICAL_CLASSES[Number.parseInt(classChoice, 10) - 1].id);
+  topology.opticalClassId = opticalClass.id;
   if (opticalClass.id !== 'custom') {
     topology.tx = opticalClass.tx;
     topology.rx = opticalClass.rx;
   }
 
-  // TX / RX (default dari kelas atau prefill)
+  // 2. TX / RX
+  step();
+  console.log(colors.bold('DAYA (OLT/SFP):'));
   const txInput = await prompter.ask(`TX Power SFP (dBm) (default ${topology.tx}):`, {
     transform: (v) => (v === '' ? String(topology.tx) : v),
-    validate: (v, raw) => (parseDecimal(raw) == null ? 'angka tidak valid, contoh: 7 atau -2' : undefined),
+    validate: (v, raw) => (raw !== '' && parseDecimal(raw) == null ? 'angka tidak valid, contoh: 7 atau -2' : undefined),
   });
   topology.tx = parseDecimal(txInput);
 
   const rxInput = await prompter.ask(`RX Sensitivity ONT (dBm) (default ${topology.rx}):`, {
     transform: (v) => (v === '' ? String(topology.rx) : v),
-    validate: (v, raw) => (parseDecimal(raw) == null ? 'angka tidak valid, contoh: -27' : undefined),
+    validate: (v, raw) => (raw !== '' && parseDecimal(raw) == null ? 'angka tidak valid, contoh: -27' : undefined),
   });
   topology.rx = parseDecimal(rxInput);
 
-  // Gelombang
+  // 3. Gelombang
+  step();
   console.log(colors.bold(`GELOMBANG: ${WAVELENGTHS.join(' / ')} nm`));
-  const wlChoice = await prompter.ask(`Pilih gelombang (nm)${prefill ? ` (default ${topology.wavelength})` : ' (default 1310)'}:`, {
+  const wlChoice = await prompter.ask(`Pilih gelombang (nm) (default ${topology.wavelength}):`, {
     transform: (v) => (v === '' ? String(topology.wavelength) : v),
-    validate: (v) => (WAVELENGTHS.includes(Number.parseInt(v, 10)) ? undefined : `masukkan salah satu: ${WAVELENGTHS.join(', ')}`),
+    validate: (v, raw) => (raw !== '' && !WAVELENGTHS.includes(Number.parseInt(raw, 10)) ? `masukkan salah satu: ${WAVELENGTHS.join(', ')}` : undefined),
   });
   topology.wavelength = Number.parseInt(wlChoice, 10);
 
-  // Tipe fiber
+  // 4. Tipe fiber
+  step();
   console.log(colors.bold('TIPE FIBER:'));
   FIBER_TYPES.forEach((f, i) => console.log(`  ${i + 1}. ${f.label} ${colors.gray(`(${f.attenuation[topology.wavelength]} dB/km @ ${topology.wavelength} nm)`)}`));
   const fiberChoice = await prompter.ask(`Pilih tipe fiber [1-${FIBER_TYPES.length}] (default 1):`, {
@@ -172,35 +184,40 @@ async function runWizard(prompter, prefill = null) {
   });
   topology.fiberTypeId = FIBER_TYPES[Number.parseInt(fiberChoice, 10) - 1].id;
 
-  // Segmen
-  topology.segments = [];
+  // 5. Segmen (tiap segmen satu layar: ringkasan + daftar splitter)
   let adding = true;
   while (adding) {
+    step();
     const index = topology.segments.length;
     const defaultName = index === 0 ? 'FEEDER' : 'ODP';
-    const name = await prompter.ask(`Nama segmen #${index + 1} (default ${defaultName}):`, {
+    console.log(colors.bold(`SEGMEN #${index + 1}:`));
+    const name = await prompter.ask(`Nama segmen (default ${defaultName}):`, {
       transform: (v) => (v === '' ? defaultName : v.toUpperCase()),
     });
 
-    const km = await prompter.ask('  Panjang kabel (km):', {
+    step();
+    console.log(colors.bold(`SEGMEN #${index + 1} — ${name}:`));
+    const km = await prompter.ask('Panjang kabel (km):', {
       transform: (v) => String(parseDecimal(v) ?? NaN),
       validate: (v, raw) => (parseDecimal(raw) == null ? 'angka tidak valid, contoh: 5 atau 0,5' : undefined),
     });
-    const splice = await prompter.ask('  Jumlah splicing (titik):', {
+    const splice = await prompter.ask('Jumlah splicing (titik):', {
       transform: (v) => String(parseDecimal(v) ?? NaN),
       validate: (v, raw) => (parseDecimal(raw) == null ? 'angka tidak valid' : undefined),
     });
-    const conn = await prompter.ask('  Jumlah konektor (pcs):', {
+    const conn = await prompter.ask('Jumlah konektor (pcs):', {
       transform: (v) => String(parseDecimal(v) ?? NaN),
       validate: (v, raw) => (parseDecimal(raw) == null ? 'angka tidak valid' : undefined),
     });
 
-    console.log(colors.bold('  SPLITTER:'));
+    step();
+    console.log(colors.bold(`SEGMEN #${index + 1} — ${name}:`));
+    console.log(colors.bold('SPLITTER DI UJUNG SEGMEN:'));
     SPLITTERS.forEach((s, i) => {
       const lossText = s.kind === 'ratio' ? `${s.lossMain}/${s.lossTap} dB (utama/tap)` : `${s.loss} dB`;
-      console.log(`    ${i + 1}. ${s.label} ${colors.gray(`(${lossText})`)}`);
+      console.log(`  ${i + 1}. ${s.label} ${colors.gray(`(${lossText})`)}`);
     });
-    const splitterChoice = await prompter.ask(`  Pilih splitter [1-${SPLITTERS.length}] (default 1 = Direct):`, {
+    const splitterChoice = await prompter.ask(`Pilih splitter [1-${SPLITTERS.length}] (default 1 = Direct):`, {
       transform: (v) => (v === '' ? '1' : v),
       validate: (v) => {
         const n = Number.parseInt(v, 10);
@@ -216,16 +233,19 @@ async function runWizard(prompter, prefill = null) {
       splitterId: SPLITTERS[Number.parseInt(splitterChoice, 10) - 1].id,
     });
 
+    step();
     const more = await prompter.ask('Tambah segmen lagi? (y/n):', {
       transform: (v) => v.toLowerCase(),
-      validate: (v) => (v === 'y' || v === 'n' || v === '' ? undefined : 'jawab y atau n'),
+      validate: (v) => (v === 'y' || v === 'n' ? undefined : 'jawab y atau n'),
     });
     adding = more === 'y';
   }
 
+  // Hasil di layar bersih
+  clearScreen();
   const result = calculate(topology);
   renderResult(result);
-  await persistHistory(topology.segments.map((s) => s.name).join('-'), topology, result, { skip: Boolean(prefill) && options['no-save'] });
+  await persistHistory(topology.segments.map((s) => s.name).join('-'), topology, result);
   await maybeCopyAndSave(result, options);
   return result;
 }
