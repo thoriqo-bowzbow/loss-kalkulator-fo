@@ -5,3 +5,6 @@ tsconfig.tsbuildinfo
 
 # Command Code local settings (session tools, taste learning)
 .commandcode/
+
+# CLI local data (riwayat perhitungan)
+cli/data/
