@@ -164,12 +164,16 @@ async function runWizard(prompter, prefill = null) {
 
   // 3. Gelombang
   step();
-  console.log(colors.bold(`GELOMBANG: ${WAVELENGTHS.join(' / ')} nm`));
-  const wlChoice = await prompter.ask(`Pilih gelombang (nm) (default ${topology.wavelength}):`, {
-    transform: (v) => (v === '' ? String(topology.wavelength) : v),
-    validate: (v, raw) => (raw !== '' && !WAVELENGTHS.includes(Number.parseInt(raw, 10)) ? `masukkan salah satu: ${WAVELENGTHS.join(', ')}` : undefined),
+  console.log(colors.bold('GELOMBANG:'));
+  WAVELENGTHS.forEach((wl, i) => console.log(`  ${i + 1}. ${wl} nm`));
+  const wlChoice = await prompter.ask(`Pilih gelombang [1-${WAVELENGTHS.length}] (default 1 = 1310 nm):`, {
+    transform: (v) => (v === '' ? '1' : v),
+    validate: (v) => {
+      const n = Number.parseInt(v, 10);
+      if (Number.isNaN(n) || n < 1 || n > WAVELENGTHS.length) return `masukkan nomor 1-${WAVELENGTHS.length}`;
+    },
   });
-  topology.wavelength = Number.parseInt(wlChoice, 10);
+  topology.wavelength = WAVELENGTHS[Number.parseInt(wlChoice, 10) - 1];
 
   // 4. Tipe fiber
   step();
