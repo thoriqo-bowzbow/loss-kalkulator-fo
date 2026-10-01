@@ -45,7 +45,7 @@ Batch mode reads a CSV of surveyed links and prints a recap table with a verdict
 
 ## 🚀 Live Demo & Run Locally
 
-**[Open the Web Calculator](https://kalkulator-redaman.riqo.biz.id/)** — also auto-deployed to GitHub Pages on every push to `main`.
+**[Open the Web Calculator](https://fo.riqo.web.id/)** — also auto-deployed to GitHub Pages on every push to `main`.
 
 ```bash
 npm install
